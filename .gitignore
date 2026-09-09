@@ -1,3 +1,6 @@
 target
 Cargo.lock
+# The benchmark crate has its own workspace and its lockfile is committed, so
+# that CodSpeed runs always measure the same dependency graph.
+!/benchmarks/Cargo.lock
 /.cargo/config

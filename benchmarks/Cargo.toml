@@ -1,0 +1,48 @@
+[package]
+name = "rust-url-benchmarks"
+version = "0.0.0"
+authors = ["The rust-url developers"]
+description = "CodSpeed benchmarks for the crates of the rust-url workspace"
+license = "MIT OR Apache-2.0"
+publish = false
+edition = "2021"
+
+# This crate is intentionally kept out of the root workspace: the CodSpeed
+# compatibility layers require a much more recent Rust version than the MSRV of
+# the published crates, which the CI jobs of the workspace still build against.
+[workspace]
+members = ["."]
+
+[dependencies]
+data-url = { path = "../data-url" }
+form_urlencoded = { path = "../form_urlencoded" }
+idna = { path = "../idna" }
+percent-encoding = { path = "../percent_encoding" }
+url = { path = "../url" }
+
+[dev-dependencies]
+divan = { package = "codspeed-divan-compat", version = "5" }
+
+[[bench]]
+name = "url_parse"
+harness = false
+
+[[bench]]
+name = "url_api"
+harness = false
+
+[[bench]]
+name = "idna"
+harness = false
+
+[[bench]]
+name = "percent_encoding"
+harness = false
+
+[[bench]]
+name = "form_urlencoded"
+harness = false
+
+[[bench]]
+name = "data_url"
+harness = false
