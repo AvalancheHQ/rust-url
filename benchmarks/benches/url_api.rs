@@ -119,10 +119,19 @@ fn append_query_pairs(bencher: Bencher) {
     });
 }
 
+// Same fixture as the `url_to_file_path` benchmark of `url/benches/parse_url.rs`,
+// so that the measurements stay comparable with the upstream benchmark.
 #[cfg(unix)]
-const FILE_PATH: &str = "/usr/share/doc/rust-url/some file with spaces.html";
+const FILE_PATH: &str = "/data/dir/next_dir/sub_sub_dir/testing/testing.json";
 #[cfg(windows)]
-const FILE_PATH: &str = r"C:\Program Files\rust-url\some file with spaces.html";
+const FILE_PATH: &str = r"C:\dir\next_dir\sub_sub_dir\testing\testing.json";
+
+// A path with spaces, which exercises the percent-encoding paths of the
+// conversion on a longer input.
+#[cfg(unix)]
+const FILE_PATH_WITH_SPACES: &str = "/usr/share/doc/rust-url/some file with spaces.html";
+#[cfg(windows)]
+const FILE_PATH_WITH_SPACES: &str = r"C:\Program Files\rust-url\some file with spaces.html";
 
 /// `file:` URL to path conversion, and back.
 #[cfg(any(unix, windows))]
@@ -136,4 +145,17 @@ fn to_file_path(bencher: Bencher) {
 #[divan::bench]
 fn from_file_path(bencher: Bencher) {
     bencher.bench(|| Url::from_file_path(black_box(FILE_PATH)).unwrap());
+}
+
+#[cfg(any(unix, windows))]
+#[divan::bench]
+fn to_file_path_with_spaces(bencher: Bencher) {
+    let url = Url::from_file_path(FILE_PATH_WITH_SPACES).unwrap();
+    bencher.bench(|| black_box(&url).to_file_path().unwrap());
+}
+
+#[cfg(any(unix, windows))]
+#[divan::bench]
+fn from_file_path_with_spaces(bencher: Bencher) {
+    bencher.bench(|| Url::from_file_path(black_box(FILE_PATH_WITH_SPACES)).unwrap());
 }

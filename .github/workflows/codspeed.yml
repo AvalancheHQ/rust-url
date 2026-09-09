@@ -26,7 +26,9 @@ jobs:
           bins: cargo-codspeed
       # The benchmarks live in their own workspace, see benchmarks/Cargo.toml
       - name: Build the benchmark targets
-        run: cargo codspeed build
+        # `--locked` keeps the dependency graph identical across runs, so that
+        # measurements stay comparable with the baseline.
+        run: cargo codspeed build --locked
         working-directory: benchmarks
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v5
